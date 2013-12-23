@@ -1,4 +1,4 @@
 package com.bitwiseor.log.core.event
 
-public abstract class RequestUpdateEvent {
+public class RequestUpdateEvent {
 }

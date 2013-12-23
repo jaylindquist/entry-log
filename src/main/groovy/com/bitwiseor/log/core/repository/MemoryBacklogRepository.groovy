@@ -26,7 +26,6 @@ class MemoryBacklogRepository implements BacklogRepository {
 
 	@Override
 	public void create(BacklogEntry item) {
-		item.id = nextId()
 		if(!entries.containsKey(item.id)) {
 			def modifiable = new HashMap<Integer,BacklogEntry>(entries)
 			modifiable[item.id] = item

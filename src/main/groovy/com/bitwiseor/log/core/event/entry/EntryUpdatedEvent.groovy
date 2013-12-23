@@ -17,7 +17,7 @@ public class EntryUpdatedEvent extends UpdatedEvent {
 	
 	static EntryUpdatedEvent notFound(final Integer id) {
 		def event = new EntryUpdatedEvent(id)
-		event.entityFound = false
+		event.entityExists = false
 		return event
 	}
 }

@@ -1,9 +1,9 @@
 package com.bitwiseor.log.core.event
 
 public class CreatedEvent {
-	protected boolean entityFound = true
+	protected boolean entityExists = false
 
 	public boolean isEntityFound() {
-		return entityFound
+		return entityExists
 	}
 }

@@ -15,9 +15,9 @@ public class EntryCreatedEvent extends CreatedEvent {
 		this.details = details
 	}
 	
-	static EntryCreatedEvent notfound(final Integer id) {
+	static EntryCreatedEvent exists(final Integer id) {
 		def event = new EntryCreatedEvent(id)
-		event.entityFound = false
+		event.entityExists = true
 		return event
 	}
 }

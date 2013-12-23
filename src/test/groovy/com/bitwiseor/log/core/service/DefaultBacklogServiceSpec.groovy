@@ -6,6 +6,7 @@ import spock.lang.Unroll
 import com.bitwiseor.log.core.domain.BacklogEntry
 import com.bitwiseor.log.core.domain.Game
 import com.bitwiseor.log.core.event.entry.RequestAllEntriesEvent
+import com.bitwiseor.log.core.event.entry.RequestCreateEntryEvent
 import com.bitwiseor.log.core.event.entry.RequestDeleteEntryEvent
 import com.bitwiseor.log.core.event.entry.RequestEntryEvent
 import com.bitwiseor.log.core.event.entry.RequestUpdateEntryEvent
@@ -27,7 +28,7 @@ class DefaultBacklogServiceSpec extends Specification {
 	def 'request all entries'() {
 		when:
 		def request = new RequestAllEntriesEvent()
-		def event = service.requestAll(request)
+		def event = service.request(request)
 		
 		then:
 		event?.entries?.size() == 2
@@ -37,7 +38,7 @@ class DefaultBacklogServiceSpec extends Specification {
 	def 'request single entry'() {
 		when:
 		def request = new RequestEntryEvent(id)
-		def event = service.requestEntry(request)
+		def event = service.request(request)
 	
 		then:
 		event?.details?.entryId == result
@@ -54,7 +55,7 @@ class DefaultBacklogServiceSpec extends Specification {
 		when:
 		def details = entry.toEntryDetails()
 		def request = new RequestDeleteEntryEvent(details.entryId, details)
-		def event = service.requestDeleteEntry(request)
+		def event = service.request(request)
 		
 		then:
 		repo.entries.size() == result
@@ -66,11 +67,12 @@ class DefaultBacklogServiceSpec extends Specification {
 		new BacklogEntry(id:3, game:new Game('Not available'))	|| 2		| false
 	}
 	
+	@Unroll
 	def 'request update entry'() {		
 		when:
 		def details = entry.toEntryDetails()
 		def request = new RequestUpdateEntryEvent(details.entryId, details)
-		def event = service.requestUpdateEntry(request)
+		def event = service.request(request)
 		
 		then:
 		event.entityExists == exists
@@ -80,6 +82,23 @@ class DefaultBacklogServiceSpec extends Specification {
 		entry													|| id	| exists
 		new BacklogEntry(id:1, game:new Game('Updated name'))	|| 1	| true
 		new BacklogEntry(id:3, game:new Game('Not available'))	|| 3	| false
+	}
+	
+	@Unroll
+	def 'request create entry'() {
+		when:
+		def details = entry.toEntryDetails()
+		def request = new RequestCreateEntryEvent(details)
+		def event = service.request(request)
+		
+		then:
+		repo.entries.size() == result
+		event.entityExists == found
+		
+		where:
+		entry													|| result	| found
+		new BacklogEntry(id:1, game:new Game('Already exists'))	|| 2		| true
+		new BacklogEntry(id:3, game:new Game('Not available'))	|| 3		| false
 	}
 	
 }

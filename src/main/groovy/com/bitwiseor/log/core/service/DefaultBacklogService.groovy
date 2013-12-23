@@ -16,7 +16,7 @@ class DefaultBacklogService implements BacklogService {
 	}
 
 	@Override
-	public AllEntriesEvent requestAll(RequestAllEntriesEvent event) {
+	public AllEntriesEvent request(RequestAllEntriesEvent event) {
 		def sorted = new ArrayList(repo.readAll())
 		Collections.sort(sorted, new Comparator<BacklogEntry>() {
 				int compare(BacklogEntry left, BacklogEntry right) {
@@ -27,7 +27,7 @@ class DefaultBacklogService implements BacklogService {
 	}
 
 	@Override
-	public EntryReadEvent requestEntry(RequestEntryEvent event) {
+	public EntryReadEvent request(RequestEntryEvent event) {
 		try {
 			def details = repo.read(event.id).toEntryDetails()
 			return new EntryReadEvent(details.entryId, details)
@@ -38,7 +38,7 @@ class DefaultBacklogService implements BacklogService {
 	}
 
 	@Override
-	public EntryDeletedEvent requestDeleteEntry(RequestDeleteEntryEvent event) {
+	public EntryDeletedEvent request(RequestDeleteEntryEvent event) {
 		try {
 			repo.delete(event.id)
 			return new EntryDeletedEvent(event.id, event.details)
@@ -49,20 +49,26 @@ class DefaultBacklogService implements BacklogService {
 	}
 
 	@Override
-	public EntryUpdatedEvent requestUpdateEntry(RequestUpdateEntryEvent event) {
+	public EntryUpdatedEvent request(RequestUpdateEntryEvent event) {
 		try {
 			repo.update(BacklogEntry.fromEntryDetails(event.details))
 			return new EntryUpdatedEvent(event.id, event.details)
 		} catch(RepositoryException ex) {
 			log.warn("Unable to complete requestUpdateEntry", ex)
-			return EntryUpdatedEvent.(event.id)
+			return EntryUpdatedEvent.notFound(event.id)
 		}
 	}
 
 	@Override
-	public EntryCreatedEvent requestCreateEntry(RequestCreateEntryEvent event) {
-		// TODO Auto-generated method stub
-		return null;
+	public EntryCreatedEvent request(RequestCreateEntryEvent event) {
+		def entry = BacklogEntry.fromEntryDetails(event.details)
+		try {
+			repo.create(entry)
+			return new EntryCreatedEvent(entry.id, entry.toEntryDetails())
+		} catch(RepositoryException ex) {
+			log.warn("Unable to complete requestCreateEntry", ex)
+			return EntryCreatedEvent.exists(entry.id)
+		}
 	}
 
 }
