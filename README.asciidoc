@@ -1,3 +1,0 @@
-= entry-log =
-
-Test REST service / API based on Spring sample REST service tutorial
