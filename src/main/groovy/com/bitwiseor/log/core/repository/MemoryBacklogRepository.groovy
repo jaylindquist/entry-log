@@ -1,8 +1,7 @@
 package com.bitwiseor.log.core.repository
 
-import java.util.List
-
-import com.bitwiseor.log.core.domain.BacklogEntry;
+import com.bitwiseor.log.core.domain.BacklogEntry
+import com.bitwiseor.log.core.exception.RepositoryException
 
 class MemoryBacklogRepository implements BacklogRepository {
 	private Map<Long,BacklogEntry> entries
@@ -13,7 +12,11 @@ class MemoryBacklogRepository implements BacklogRepository {
 	
 	@Override
 	public BacklogEntry read(Long id) {
+		if(entries.containsKey(id)) {
 		return entries[id]
+		} else {
+			throw new RepositoryException("Entry ${id} does not exist in repository")
+		}
 	}
 
 	@Override
@@ -23,12 +26,13 @@ class MemoryBacklogRepository implements BacklogRepository {
 
 	@Override
 	public void create(BacklogEntry item) {
+		item.id = nextId()
 		if(!entries.containsKey(item.id)) {
 			def modifiable = new HashMap<Long,BacklogEntry>(entries)
 			modifiable[item.id] = item
 			this.entries = Collections.unmodifiableMap(modifiable)
 		} else {
-			throw new RuntimeException("Entry ${item.id} already exists in repository")
+			throw new RepositoryException("Entry ${item.id} already exists in repository")
 		}
 	}
 
@@ -39,19 +43,22 @@ class MemoryBacklogRepository implements BacklogRepository {
 			modifiable[item.id] = item
 			this.entries = Collections.unmodifiableMap(modifiable)
 		} else {
-			throw new RuntimeException("Entry ${item.id} does not exists in repository")
+			throw new RepositoryException("Entry ${item.id} does not exist in repository")
 		}
 	}
 
 	@Override
-	public void delete(BacklogEntry item) {
-		if(entries.containsKey(item.id)) {
+	public void delete(Long id) {
+		if(entries.containsKey(id)) {
 			def modifiable = new HashMap<Long,BacklogEntry>(entries)
-			modifiable.remove(item.id)
+			modifiable.remove(id)
 			this.entries = Collections.unmodifiableMap(modifiable)
 		} else {
-			throw new RuntimeException("Entry ${item.id} does not exists in repository")
+			throw new RepositoryException("Entry ${id} does not exist in repository")
 		}
 	}
 
+	private Long nextId() {
+		return entries.keySet().max() + 1
+	}
 }

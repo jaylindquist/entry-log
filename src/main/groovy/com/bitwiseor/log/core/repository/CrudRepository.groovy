@@ -5,5 +5,5 @@ interface CrudRepository<T> {
 	List<T> readAll()
 	void create(T item)
 	void update(T item)
-	void delete(T item)
+	void delete(Long id)
 }
