@@ -17,7 +17,13 @@ class DefaultBacklogService implements BacklogService {
 
 	@Override
 	public AllEntriesEvent requestAll(RequestAllEntriesEvent event) {
-		return new AllEntriesEvent(repo.readAll()*.toEntryDetails()) 
+		def sorted = new ArrayList(repo.readAll())
+		Collections.sort(sorted, new Comparator<BacklogEntry>() {
+				int compare(BacklogEntry left, BacklogEntry right) {
+					return right.id - left.id
+				}
+			})
+		return new AllEntriesEvent(sorted*.toEntryDetails()) 
 	}
 
 	@Override

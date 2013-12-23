@@ -20,8 +20,8 @@ class MemoryBacklogRepository implements BacklogRepository {
 	}
 
 	@Override
-	public List<BacklogEntry> readAll() {
-		return Collections.unmodifiableList(entries.values())
+	public Collection<BacklogEntry> readAll() {
+		return Collections.unmodifiableCollection(entries.values())
 	}
 
 	@Override

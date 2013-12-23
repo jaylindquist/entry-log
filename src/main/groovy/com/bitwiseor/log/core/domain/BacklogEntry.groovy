@@ -10,14 +10,13 @@ class BacklogEntry {
 		def entry = new BacklogEntry()
 		entry.id = details.entryId
 		entry.game = new Game(details.gameName)
+		return entry
 	}
 	
 	EntryDetails toEntryDetails() {
 		def details = new EntryDetails()
 		details.entryId = id
 		details.gameName = game.title
-		println id.class
-		println details.entryId.class
 		return details
 	}
 	

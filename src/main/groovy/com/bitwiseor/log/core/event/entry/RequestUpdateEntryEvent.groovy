@@ -1,6 +1,6 @@
 package com.bitwiseor.log.core.event.entry
 
-public abstract class RequestUpdateEntryEvent {
+public class RequestUpdateEntryEvent {
 	private final Integer id
 	private final EntryDetails details
 	

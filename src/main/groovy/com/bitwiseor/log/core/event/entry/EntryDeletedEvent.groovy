@@ -5,7 +5,7 @@ import com.bitwiseor.log.core.event.DeletedEvent
 public class EntryDeletedEvent extends DeletedEvent {
 	final Integer id
 	final EntryDetails details
-	final boolean deletionCompleted
+	protected boolean deletionCompleted
 	
 	private EntryDeletedEvent(final Integer id) {
 		this.id = id
