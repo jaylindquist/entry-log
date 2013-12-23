@@ -1,5 +1,4 @@
 apply plugin:'groovy'
-apply plugin:'jacoco'
 
 version = '1.0.0'
 
@@ -16,27 +15,4 @@ dependencies {
 
 task wrapper(type: Wrapper) {
 	gradleVersion = '1.10'
-}
-
-jacoco {
-    toolVersion = "0.6.2.201302030002"
-    reportsDir = file("$buildDir/customJacocoReportDir")
-}
-
-test {
-    jacoco {
-        append = false
-        destinationFile = file("$buildDir/jacoco/jacocoTest.exec")
-        classDumpFile = file("$buildDir/jacoco/classpathdumps")
-    }
-}
-
-
-jacocoTestReport {
-    additionalSourceDirs = files(sourceSets.main.allGroovy.srcDirs)
-    reports {
-        xml.enabled false
-        csv.enabled false
-        html.destination "${buildDir}/jacocoHtml"
-    }
 }
