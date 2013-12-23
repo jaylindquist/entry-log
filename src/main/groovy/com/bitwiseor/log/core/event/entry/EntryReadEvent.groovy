@@ -3,20 +3,21 @@ package com.bitwiseor.log.core.event.entry
 import com.bitwiseor.log.core.event.ReadEvent
 
 public class EntryReadEvent extends ReadEvent {
-	private final Long id
+	private final Integer id
 	private final EntryDetails details
 	
-	private EntryReadEvent(Long id) {
+	private EntryReadEvent(Integer id) {
 		this.id = id
 	}
 	
-	EntryReadEvent(final Long id, final EntryDetails details) {
+	EntryReadEvent(final Integer id, final EntryDetails details) {
 		this.id = id
 		this.details = details
 	}
 	
-	static EntryReadEvent notFound(final Long id) {
+	static EntryReadEvent notFound(final Integer id) {
 		def event = new EntryReadEvent(id)
 		event.entityFound = false
+		return event
 	}
 }

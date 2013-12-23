@@ -26,7 +26,7 @@ class DefaultBacklogService implements BacklogService {
 			def details = repo.read(event.id).toEntryDetails()
 			return new EntryReadEvent(details.entryId, details)
 		} catch(RepositoryException ex) {
-			log.warn(ex)
+			log.warn("Unable to complete requestEntry", ex)
 			return EntryReadEvent.notFound(event.id)
 		}
 	}
@@ -37,7 +37,7 @@ class DefaultBacklogService implements BacklogService {
 			repo.delete(event.id)
 			return new EntryDeletedEvent(event.id, event.details)
 		} catch(RepositoryException ex) {
-			log.warn(ex)
+			log.warn("Unable to complete requestDeleteEntry", ex)
 			return EntryDeletedEvent.notFound(event.id)
 		}
 	}
@@ -48,7 +48,7 @@ class DefaultBacklogService implements BacklogService {
 			repo.update(BacklogEntry.fromEntryDetails(event.details))
 			return new EntryUpdatedEvent(event.id, event.details)
 		} catch(RepositoryException ex) {
-			log.warn(ex)
+			log.warn("Unable to complete requestUpdateEntry", ex)
 			return EntryUpdatedEvent.(event.id)
 		}
 	}

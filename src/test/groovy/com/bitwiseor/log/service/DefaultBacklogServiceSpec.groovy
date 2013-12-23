@@ -1,3 +1,5 @@
+package com.bitwiseor.log.core.service
+
 import spock.lang.Specification
 
 import com.bitwiseor.log.core.domain.BacklogEntry
@@ -13,7 +15,8 @@ class DefaultBacklogServiceSpec extends Specification {
 	
 	void setup() {
 		def repo = new MemoryBacklogRepository([
-			1, new BacklogEntry(id = 1, game = new Game('Final Fantasy'))])
+			1: new BacklogEntry(id:1, game:new Game('Final Fantasy'))
+		])
 		
 		service = new DefaultBacklogService(repo)
 	}
@@ -23,6 +26,7 @@ class DefaultBacklogServiceSpec extends Specification {
 		def request = new RequestEntryEvent(1)
 		
 		then:
-		assert service.requestEntry(new RequestEntryEvent(1)).details.id == 1
+		def event = service.requestEntry(request)
+		assert event?.details?.entryId == 1
 	}
 }

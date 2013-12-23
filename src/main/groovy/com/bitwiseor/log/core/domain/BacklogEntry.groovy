@@ -3,7 +3,7 @@ package com.bitwiseor.log.core.domain
 import com.bitwiseor.log.core.event.entry.EntryDetails
 
 class BacklogEntry {
-	Long id
+	Integer id
 	Game game
 	
 	static BacklogEntry fromEntryDetails(EntryDetails details) {
@@ -16,6 +16,9 @@ class BacklogEntry {
 		def details = new EntryDetails()
 		details.entryId = id
 		details.gameName = game.title
+		println id.class
+		println details.entryId.class
+		return details
 	}
 	
 }
