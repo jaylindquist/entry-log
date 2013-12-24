@@ -4,8 +4,8 @@ public class RequestUpdateEntryEvent {
 	private final Integer id
 	private final EntryDetails details
 	
-	RequestUpdateEntryEvent(final Integer id, final EntryDetails details) {
-		this.id = id
+	RequestUpdateEntryEvent(final EntryDetails details) {
+		this.id = details.entryId
 		this.details = details
 	}
 }

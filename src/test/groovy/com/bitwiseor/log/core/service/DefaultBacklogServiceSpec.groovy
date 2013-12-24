@@ -54,7 +54,7 @@ class DefaultBacklogServiceSpec extends Specification {
 	def 'request delete entry'() {		
 		when:
 		def details = entry.toEntryDetails()
-		def request = new RequestDeleteEntryEvent(details.entryId, details)
+		def request = new RequestDeleteEntryEvent(details)
 		def event = service.request(request)
 		
 		then:
@@ -71,7 +71,7 @@ class DefaultBacklogServiceSpec extends Specification {
 	def 'request update entry'() {		
 		when:
 		def details = entry.toEntryDetails()
-		def request = new RequestUpdateEntryEvent(details.entryId, details)
+		def request = new RequestUpdateEntryEvent(details)
 		def event = service.request(request)
 		
 		then:

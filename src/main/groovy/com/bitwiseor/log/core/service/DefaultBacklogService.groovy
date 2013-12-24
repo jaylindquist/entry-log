@@ -30,7 +30,7 @@ class DefaultBacklogService implements BacklogService {
 	public EntryReadEvent request(RequestEntryEvent event) {
 		try {
 			def details = repo.read(event.id).toEntryDetails()
-			return new EntryReadEvent(details.entryId, details)
+			return new EntryReadEvent(details)
 		} catch(RepositoryException ex) {
 			log.warn("Unable to complete requestEntry", ex)
 			return EntryReadEvent.notFound(event.id)
@@ -41,7 +41,7 @@ class DefaultBacklogService implements BacklogService {
 	public EntryDeletedEvent request(RequestDeleteEntryEvent event) {
 		try {
 			repo.delete(event.id)
-			return new EntryDeletedEvent(event.id, event.details)
+			return new EntryDeletedEvent(event.details)
 		} catch(RepositoryException ex) {
 			log.warn("Unable to complete requestDeleteEntry", ex)
 			return EntryDeletedEvent.notFound(event.id)
@@ -52,7 +52,7 @@ class DefaultBacklogService implements BacklogService {
 	public EntryUpdatedEvent request(RequestUpdateEntryEvent event) {
 		try {
 			repo.update(BacklogEntry.fromEntryDetails(event.details))
-			return new EntryUpdatedEvent(event.id, event.details)
+			return new EntryUpdatedEvent(event.details)
 		} catch(RepositoryException ex) {
 			log.warn("Unable to complete requestUpdateEntry", ex)
 			return EntryUpdatedEvent.notFound(event.id)
@@ -64,7 +64,7 @@ class DefaultBacklogService implements BacklogService {
 		def entry = BacklogEntry.fromEntryDetails(event.details)
 		try {
 			repo.create(entry)
-			return new EntryCreatedEvent(entry.id, entry.toEntryDetails())
+			return new EntryCreatedEvent(entry.toEntryDetails())
 		} catch(RepositoryException ex) {
 			log.warn("Unable to complete requestCreateEntry", ex)
 			return EntryCreatedEvent.exists(entry.id)

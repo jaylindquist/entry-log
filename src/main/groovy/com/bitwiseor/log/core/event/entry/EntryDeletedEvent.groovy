@@ -11,14 +11,14 @@ public class EntryDeletedEvent extends DeletedEvent {
 		this.id = id
 	}
 	
-	EntryDeletedEvent(final Integer id, final EntryDetails details) {
-		this.id = id
+	EntryDeletedEvent(final EntryDetails details) {
+		this.id = details.entryId
 		this.details = details
 		this.deletionCompleted = true
 	}
 	
-	static EntryDeletedEvent deletionForbidden(final Integer id, final EntryDetails details) {
-		def event = new EntryDeletedEvent(id, details)
+	static EntryDeletedEvent deletionForbidden(final EntryDetails details) {
+		def event = new EntryDeletedEvent(details)
 		event.entityFound = true
 		event.deletionCompleted = false
 		return event

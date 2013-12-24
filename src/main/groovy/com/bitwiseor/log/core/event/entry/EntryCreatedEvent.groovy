@@ -10,8 +10,8 @@ public class EntryCreatedEvent extends CreatedEvent {
 		this.id = id
 	}
 	
-	EntryCreatedEvent(final Integer id, final EntryDetails details) {
-		this.id = id
+	EntryCreatedEvent(final EntryDetails details) {
+		this.id = details.entryId
 		this.details = details
 	}
 	

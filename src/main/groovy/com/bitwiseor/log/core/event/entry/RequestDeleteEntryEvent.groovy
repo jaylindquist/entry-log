@@ -6,8 +6,8 @@ public class RequestDeleteEntryEvent extends RequestDeleteEvent {
 	final Integer id
 	final EntryDetails details
 	
-	RequestDeleteEntryEvent(final Integer id, final EntryDetails details) {
-		this.id = id
+	RequestDeleteEntryEvent(final EntryDetails details) {
+		this.id = details.entryId
 		this.details = details
 	}	
 }

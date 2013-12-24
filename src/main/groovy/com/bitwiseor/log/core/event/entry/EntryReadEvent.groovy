@@ -10,8 +10,8 @@ public class EntryReadEvent extends ReadEvent {
 		this.id = id
 	}
 	
-	EntryReadEvent(final Integer id, final EntryDetails details) {
-		this.id = id
+	EntryReadEvent(final EntryDetails details) {
+		this.id = details.entryId
 		this.details = details
 	}
 	
