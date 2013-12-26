@@ -1,7 +1,10 @@
 package com.bitwiseor.log.core.event.entry
 
+import groovy.transform.ToString;
+
 import com.bitwiseor.log.core.event.DeletedEvent
 
+@ToString
 public class EntryDeletedEvent extends DeletedEvent {
 	final Integer id
 	final EntryDetails details
@@ -29,5 +32,9 @@ public class EntryDeletedEvent extends DeletedEvent {
 		event.entityFound = false
 		event.deletionCompleted = false
 		return event
+	}
+	
+	public boolean isDeletionCompleted() {
+		return deletionCompleted
 	}
 }

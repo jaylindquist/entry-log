@@ -1,6 +1,11 @@
 package com.bitwiseor.log.core.event.entry
 
-public class RequestUpdateEntryEvent {
+import groovy.transform.ToString
+
+import com.bitwiseor.log.core.event.RequestUpdateEvent
+
+@ToString
+public class RequestUpdateEntryEvent extends RequestUpdateEvent {
 	private final Integer id
 	private final EntryDetails details
 	

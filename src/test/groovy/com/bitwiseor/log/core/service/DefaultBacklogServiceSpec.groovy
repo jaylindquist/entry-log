@@ -53,8 +53,7 @@ class DefaultBacklogServiceSpec extends Specification {
 	
 	def 'request delete entry'() {		
 		when:
-		def details = entry.toEntryDetails()
-		def request = new RequestDeleteEntryEvent(details)
+		def request = new RequestDeleteEntryEvent(id)
 		def event = service.request(request)
 		
 		then:
@@ -62,9 +61,9 @@ class DefaultBacklogServiceSpec extends Specification {
 		event.entityFound == found
 		
 		where:
-		entry													|| result	| found
-		new BacklogEntry(id:1, game:new Game('Final Fantasy'))	|| 1		| true
-		new BacklogEntry(id:3, game:new Game('Not available'))	|| 2		| false
+		id 	|| result	| found
+		1	|| 1		| true
+		3	|| 2		| false
 	}
 	
 	@Unroll

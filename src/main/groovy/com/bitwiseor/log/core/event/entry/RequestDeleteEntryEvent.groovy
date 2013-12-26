@@ -1,13 +1,14 @@
 package com.bitwiseor.log.core.event.entry
 
+import groovy.transform.ToString;
+
 import com.bitwiseor.log.core.event.RequestDeleteEvent
 
+@ToString
 public class RequestDeleteEntryEvent extends RequestDeleteEvent {
 	final Integer id
-	final EntryDetails details
 	
-	RequestDeleteEntryEvent(final EntryDetails details) {
-		this.id = details.entryId
-		this.details = details
+	RequestDeleteEntryEvent(final Integer id) {
+		this.id = id
 	}	
 }

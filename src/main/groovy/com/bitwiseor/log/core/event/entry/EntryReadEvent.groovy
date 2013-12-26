@@ -1,7 +1,10 @@
 package com.bitwiseor.log.core.event.entry
 
+import groovy.transform.ToString;
+
 import com.bitwiseor.log.core.event.ReadEvent
 
+@ToString
 public class EntryReadEvent extends ReadEvent {
 	private final Integer id
 	private final EntryDetails details

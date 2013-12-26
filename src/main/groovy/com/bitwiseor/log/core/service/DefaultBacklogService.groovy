@@ -1,6 +1,9 @@
 package com.bitwiseor.log.core.service
 
+import groovy.transform.ToString
 import groovy.util.logging.Slf4j
+
+import org.springframework.stereotype.Service
 
 import com.bitwiseor.log.core.domain.BacklogEntry
 import com.bitwiseor.log.core.event.entry.*
@@ -8,6 +11,8 @@ import com.bitwiseor.log.core.exception.RepositoryException
 import com.bitwiseor.log.core.repository.BacklogRepository
 
 @Slf4j
+@ToString
+@Service
 class DefaultBacklogService implements BacklogService {
 	private final BacklogRepository repo
 	
@@ -40,8 +45,9 @@ class DefaultBacklogService implements BacklogService {
 	@Override
 	public EntryDeletedEvent request(RequestDeleteEntryEvent event) {
 		try {
+			def details = repo.read(event.id).toEntryDetails()
 			repo.delete(event.id)
-			return new EntryDeletedEvent(event.details)
+			return new EntryDeletedEvent(details)
 		} catch(RepositoryException ex) {
 			log.warn("Unable to complete requestDeleteEntry", ex)
 			return EntryDeletedEvent.notFound(event.id)

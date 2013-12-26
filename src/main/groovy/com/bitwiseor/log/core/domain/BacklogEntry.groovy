@@ -1,7 +1,10 @@
 package com.bitwiseor.log.core.domain
 
+import groovy.transform.ToString
+
 import com.bitwiseor.log.core.event.entry.EntryDetails
 
+@ToString
 class BacklogEntry {
 	Integer id
 	Game game
