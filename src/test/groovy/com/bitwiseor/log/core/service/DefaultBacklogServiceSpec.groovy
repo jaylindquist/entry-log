@@ -17,11 +17,10 @@ class DefaultBacklogServiceSpec extends Specification {
 	MemoryBacklogRepository repo
 	
 	void setup() {
-		repo = new MemoryBacklogRepository([
-			1: new BacklogEntry(id:1, game:new Game('Final Fantasy')),
-			2: new BacklogEntry(id:2, game:new Game('Fire Emblem'))
-		])
-		
+		repo = new MemoryBacklogRepository()		
+		repo.create(new BacklogEntry(id:1, game:new Game('Final Fantasy')))
+		repo.create(new BacklogEntry(id:2, game:new Game('Fire Emblem')))
+	
 		service = new DefaultBacklogService(repo)
 	}
 	
@@ -93,11 +92,11 @@ class DefaultBacklogServiceSpec extends Specification {
 		then:
 		repo.entries.size() == result
 		event.entityExists == found
+		event.id == details.entryId
 		
 		where:
 		entry													|| result	| found
-		new BacklogEntry(id:1, game:new Game('Already exists'))	|| 2		| true
-		new BacklogEntry(id:3, game:new Game('Not available'))	|| 3		| false
+		new BacklogEntry(id:3, game:new Game('New entry'))		|| 3		| false
 	}
 	
 }

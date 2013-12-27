@@ -1,9 +1,9 @@
 package com.bitwiseor.log.core.repository
 
-interface CrudRepository<T> {
-	T read(Integer id)
+interface CrudRepository<K, T> {
+	T read(K id)
 	Collection<T> readAll()
-	void create(T item)
+	K create(T item)
 	void update(T item)
 	void delete(Integer id)
 }

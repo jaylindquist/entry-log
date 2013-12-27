@@ -26,6 +26,7 @@ repositories {
 dependencies {
     compile 'org.codehaus.groovy:groovy-all:2.1.6'
 	compile 'org.springframework.boot:spring-boot-starter-web:0.5.0.M7'
+	compile 'org.springframework.boot:spring-boot-starter-security:0.5.0.M7'
  	
 	testCompile 'org.springframework:spring-test:4.0.0.RELEASE'
 	testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'

@@ -1,5 +1,7 @@
 package com.bitwiseor.log.rest.controller
 
+import groovy.util.logging.Slf4j
+
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
@@ -11,12 +13,14 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.util.UriComponentsBuilder
 
+import com.bitwiseor.log.core.event.entry.EntryDetails
 import com.bitwiseor.log.core.event.entry.RequestCreateEntryEvent
 import com.bitwiseor.log.core.event.entry.RequestDeleteEntryEvent
 import com.bitwiseor.log.core.event.entry.RequestUpdateEntryEvent
 import com.bitwiseor.log.core.service.BacklogService
 import com.bitwiseor.log.rest.domain.BacklogEntry
 
+@Slf4j
 @Controller
 @RequestMapping('/backlog')
 class BacklogCommandController {
@@ -52,17 +56,38 @@ class BacklogCommandController {
 	 * @return New or updated entry
 	 */
 	@RequestMapping(method=RequestMethod.PUT, value='/{id}')
-	ResponseEntity<BacklogEntry> updateEntry(@RequestBody BacklogEntry entry, UriComponentsBuilder builder) {
-		def event = backlogService.request(new RequestUpdateEntryEvent(entry.toEntryDetails()))
+	ResponseEntity<BacklogEntry> updateEntry(@PathVariable Integer id, @RequestBody BacklogEntry entry, UriComponentsBuilder builder) {
+		def details = entry.toEntryDetails(id)
+		def event = backlogService.request(new RequestUpdateEntryEvent(details))
+		log.info("${event.toString()}")
 		
 		if(!event.entityExists) {
-			return createEntry(entry, builder)
+			return create(details, builder)
 		}
 		
 		def updatedEntry = BacklogEntry.fromEntryDetails(event.details)
+		log.info("${updatedEntry.toString()}")
 		return new ResponseEntity<BacklogEntry>(updatedEntry, HttpStatus.OK)
 		
 	}
+	
+	/**
+	 * Create an entry based on details
+	 * @param details
+	 * @return
+	 */
+	ResponseEntity<BacklogEntry> create(EntryDetails details, UriComponentsBuilder builder) {
+		def event = backlogService.request(new RequestCreateEntryEvent(details))
+		
+		def createdEntry = BacklogEntry.fromEntryDetails(event.details)
+		
+		def headers = new HttpHeaders()
+		headers.setLocation(builder.path("/backlog/{id}")
+			.buildAndExpand(event.id.toString()).toUri())
+		
+		return new ResponseEntity<BacklogEntry>(createdEntry, headers, HttpStatus.CREATED)	
+	}
+	
 	
 	/**
 	 * Create new entry
@@ -73,14 +98,6 @@ class BacklogCommandController {
 	 */
 	@RequestMapping(method=RequestMethod.POST)
 	ResponseEntity<BacklogEntry> createEntry(@RequestBody BacklogEntry entry, UriComponentsBuilder builder) {
-		def event = backlogService.request(new RequestCreateEntryEvent(entry.toEntryDetails()))
-		
-		def details = BacklogEntry.fromEntryDetails(event.details)
-		
-		def headers = new HttpHeaders()
-		headers.setLocation(builder.path("/backlog/{id}")
-			.buildAndExpand(event.id.toString()).toUri())
-		
-		return new ResponseEntity<BacklogEntry>(details, headers, HttpStatus.CREATED)		
+		return create(entry.toEntryDetails(), builder)		
 	}
 }

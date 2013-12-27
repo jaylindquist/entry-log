@@ -2,6 +2,6 @@ package com.bitwiseor.log.core.repository
 
 import com.bitwiseor.log.core.domain.BacklogEntry
 
-interface BacklogRepository extends CrudRepository<BacklogEntry> {
+interface BacklogRepository extends CrudRepository<Integer, BacklogEntry> {
 	
 }

@@ -3,6 +3,7 @@ package com.bitwiseor.log.core.service
 import groovy.transform.ToString
 import groovy.util.logging.Slf4j
 
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 import com.bitwiseor.log.core.domain.BacklogEntry
@@ -14,15 +15,18 @@ import com.bitwiseor.log.core.repository.BacklogRepository
 @ToString
 @Service
 class DefaultBacklogService implements BacklogService {
-	private final BacklogRepository repo
+	@Autowired
+	private final BacklogRepository backlogRepository
 	
-	DefaultBacklogService(BacklogRepository repo) {
-		this.repo = repo
+	DefaultBacklogService(){}
+	
+	DefaultBacklogService(BacklogRepository backlogRepository) {
+		this.backlogRepository = backlogRepository
 	}
 
 	@Override
 	public AllEntriesEvent request(RequestAllEntriesEvent event) {
-		def sorted = new ArrayList(repo.readAll())
+		def sorted = new ArrayList(backlogRepository.readAll())
 		Collections.sort(sorted, new Comparator<BacklogEntry>() {
 				int compare(BacklogEntry left, BacklogEntry right) {
 					return right.id - left.id
@@ -34,7 +38,7 @@ class DefaultBacklogService implements BacklogService {
 	@Override
 	public EntryReadEvent request(RequestEntryEvent event) {
 		try {
-			def details = repo.read(event.id).toEntryDetails()
+			def details = backlogRepository.read(event.id).toEntryDetails()
 			return new EntryReadEvent(details)
 		} catch(RepositoryException ex) {
 			log.warn("Unable to complete requestEntry", ex)
@@ -45,8 +49,8 @@ class DefaultBacklogService implements BacklogService {
 	@Override
 	public EntryDeletedEvent request(RequestDeleteEntryEvent event) {
 		try {
-			def details = repo.read(event.id).toEntryDetails()
-			repo.delete(event.id)
+			def details = backlogRepository.read(event.id).toEntryDetails()
+			backlogRepository.delete(event.id)
 			return new EntryDeletedEvent(details)
 		} catch(RepositoryException ex) {
 			log.warn("Unable to complete requestDeleteEntry", ex)
@@ -56,8 +60,9 @@ class DefaultBacklogService implements BacklogService {
 
 	@Override
 	public EntryUpdatedEvent request(RequestUpdateEntryEvent event) {
+		log.info("${event.toString()}")
 		try {
-			repo.update(BacklogEntry.fromEntryDetails(event.details))
+			backlogRepository.update(BacklogEntry.fromEntryDetails(event.details))
 			return new EntryUpdatedEvent(event.details)
 		} catch(RepositoryException ex) {
 			log.warn("Unable to complete requestUpdateEntry", ex)
@@ -67,14 +72,11 @@ class DefaultBacklogService implements BacklogService {
 
 	@Override
 	public EntryCreatedEvent request(RequestCreateEntryEvent event) {
+		log.info("${event.toString()}")
 		def entry = BacklogEntry.fromEntryDetails(event.details)
-		try {
-			repo.create(entry)
-			return new EntryCreatedEvent(entry.toEntryDetails())
-		} catch(RepositoryException ex) {
-			log.warn("Unable to complete requestCreateEntry", ex)
-			return EntryCreatedEvent.exists(entry.id)
-		}
+		def id = backlogRepository.create(entry)
+		entry.id = id
+		return new EntryCreatedEvent(entry.toEntryDetails())
 	}
 
 }

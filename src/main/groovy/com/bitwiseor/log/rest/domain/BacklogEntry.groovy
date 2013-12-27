@@ -24,4 +24,8 @@ class BacklogEntry {
 	EntryDetails toEntryDetails() {
 		return new EntryDetails(entryId: entryId, gameName: gameName)
 	}
+	
+	EntryDetails toEntryDetails(Integer newId) {
+		return new EntryDetails(entryId: newId, gameName: gameName)
+	}
 }
